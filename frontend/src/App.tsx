@@ -52,7 +52,7 @@ function FundusPlaceholder({ heat = false, src }: { heat?: boolean; src?: string
   );
 }
 
-function App() {
+export default function App() {
   const [view,setView] = useState<View>("dashboard");
   const [step,setStep] = useState<Step>(1);
   const [patient,setPatient] = useState<Patient>({
