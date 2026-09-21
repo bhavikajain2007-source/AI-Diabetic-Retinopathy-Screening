@@ -1,4 +1,5 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File
+from fastapi.responses import JSONResponse
 
 from utils.image_validation import validate_image
 from services.ml_service import prepare_image, predict_image
@@ -20,14 +21,17 @@ async def predict(file: UploadFile = File(...)):
     # 3. Run DR prediction
     result = predict_image(image)
 
-    # 4. Stop if ML quality check/prediction failed
+    # 4. Stop if ML quality check/prediction failed.
+    # Return the exact shape the frontend expects: {"success": false, "error": "..."}.
+    # (Previously this raised HTTPException, which FastAPI serializes as
+    # {"detail": "..."} instead — a different shape than what was agreed.)
     if not result.get("success", False):
-        raise HTTPException(
+        return JSONResponse(
             status_code=400,
-            detail=result.get(
-                "error",
-                "Prediction failed."
-            )
+            content={
+                "success": False,
+                "error": result.get("error", "Prediction failed.")
+            }
         )
 
     # 5. Generate Grad-CAM heatmap

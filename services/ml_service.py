@@ -9,6 +9,7 @@ from ml.inference import DRPredictor
 
 MODEL_PATH = (
     Path(__file__).resolve().parent.parent
+    / "ml"
     / "models"
     / "densenet121_dr_best.pth"
 )

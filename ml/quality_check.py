@@ -56,9 +56,10 @@ def check_image_quality(
         cv2.CV_64F
     ).var()
 
-    print("Laplacian variance:", laplacian_variance)
-
+    # (removed: debug print() and the raw Laplacian variance number in the
+    # user-facing message — a camp technician doesn't need that number,
+    # and it read as a bug the one time someone actually saw it live)
     if laplacian_variance < blur_threshold:
-        return False, f"Image is too blurry.  Laplacian variance: {laplacian_variance:.2f}"
+        return False, "Image is too blurry."
 
     return True, "Image quality acceptable."
